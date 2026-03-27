@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Test Pointer</title>
+  <title>uni</title>
 
   <style>
     body {
@@ -14,29 +14,61 @@
       overflow: hidden;
     }
 
-    img {
+    .img {
       position: absolute;
       transform: translate(-50%, -50%);
-      max-width: 300px;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.25s ease, transform 0.25s ease;
     }
   </style>
 </head>
 <body>
 
 <script>
-  document.addEventListener("click", (e) => {
-    const old = document.querySelector("img");
+  function spawnImage(x, y) {
+    // remove previous image (pointer-pointer style)
+    const old = document.querySelector(".img");
     if (old) old.remove();
 
     const img = document.createElement("img");
+    img.className = "img";
 
-    img.src = "https://picsum.photos/400?random=" + Math.random();
+    // random size
+    const size = 120 + Math.random() * 220;
+    img.style.width = size + "px";
 
-    img.style.left = e.clientX + "px";
-    img.style.top = e.clientY + "px";
+    // random rotation
+    const rotation = (Math.random() - 0.5) * 40;
+    img.style.transform = `translate(-50%, -50%) rotate(${rotation}deg)`;
 
-    document.body.appendChild(img);
+    // position
+    img.style.left = x + "px";
+    img.style.top = y + "px";
+
+    // preload image
+    const temp = new Image();
+    temp.onload = () => {
+      img.src = temp.src;
+      document.body.appendChild(img);
+
+      requestAnimationFrame(() => {
+        img.style.opacity = 1;
+      });
+    };
+
+    // 🔑 reliable unicycle images
+    temp.src = "https://loremflickr.com/600/600/unicycle?random=" + Math.random();
+  }
+
+  document.addEventListener("click", (e) => {
+    spawnImage(e.clientX, e.clientY);
   });
+
+  // optional: spawn one on load
+  window.onload = () => {
+    spawnImage(window.innerWidth / 2, window.innerHeight / 2);
+  };
 </script>
 
 </body>
