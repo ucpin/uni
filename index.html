@@ -3,57 +3,82 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Random Unicycle</title>
+  <title>Unicycle Pointer</title>
 
   <style>
     body {
       margin: 0;
       height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
       background: black;
-      cursor: pointer;
+      cursor: crosshair;
       overflow: hidden;
+      font-family: sans-serif;
     }
 
-    img {
-      max-width: 90vw;
-      max-height: 90vh;
-      object-fit: contain;
-      transition: opacity 0.3s ease;
-    }
-
-    .fade {
+    .img {
+      position: absolute;
+      pointer-events: none;
+      transform: translate(-50%, -50%);
       opacity: 0;
+      transition: opacity 0.25s ease, transform 0.25s ease;
     }
   </style>
 </head>
 <body>
 
-  <img id="unicycle" src="" alt="Random Unicycle" />
+<script>
+  // 👉 PUT YOUR IMAGES IN /images FOLDER
+  const images = [
+    "images/unicycle1.jpg",
+    "images/unicycle2.jpg",
+    "images/unicycle3.jpg",
+    "images/unicycle4.jpg",
+    "images/unicycle5.jpg",
+    "images/unicycle6.jpg"
+  ];
 
-  <script>
-    const img = document.getElementById("unicycle");
+  function getRandomImage() {
+    return images[Math.floor(Math.random() * images.length)];
+  }
 
-    function newImage() {
-      // Uses Unsplash random image API
-      const url = "https://source.unsplash.com/800x800/?unicycle&" + Math.random();
+  function spawnImage(x, y) {
+    // remove previous image (pointer-pointer style)
+    document.body.innerHTML = "";
 
-      img.classList.add("fade");
+    const img = document.createElement("img");
+    img.className = "img";
 
-      setTimeout(() => {
-        img.src = url;
-        img.classList.remove("fade");
-      }, 200);
-    }
+    // random size
+    const size = 120 + Math.random() * 220;
+    img.style.width = size + "px";
 
-    // Load first image
-    newImage();
+    // random rotation
+    const rotation = (Math.random() - 0.5) * 40;
+    img.style.transform = `translate(-50%, -50%) rotate(${rotation}deg)`;
 
-    // Change image on click anywhere
-    document.body.addEventListener("click", newImage);
-  </script>
+    // position at cursor
+    img.style.left = x + "px";
+    img.style.top = y + "px";
+
+    // preload image before showing (no flicker)
+    const temp = new Image();
+    temp.onload = () => {
+      img.src = temp.src;
+      document.body.appendChild(img);
+
+      // fade in
+      requestAnimationFrame(() => {
+        img.style.opacity = 1;
+      });
+    };
+
+    temp.src = getRandomImage();
+  }
+
+  document.addEventListener("click", (e) => {
+    spawnImage(e.clientX, e.clientY);
+  });
+</script>
 
 </body>
 </html>
