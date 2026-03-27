@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>uni</title>
+  <title>Test Pointer</title>
 
   <style>
     body {
@@ -12,65 +12,31 @@
       background: black;
       cursor: crosshair;
       overflow: hidden;
-      display: block;
     }
 
-    .img {
+    img {
       position: absolute;
-      pointer-events: none;
       transform: translate(-50%, -50%);
-      opacity: 0;
-      transition: opacity 0.25s ease, transform 0.25s ease;
+      max-width: 300px;
     }
   </style>
 </head>
 <body>
 
 <script>
-  function spawnImage(x, y) {
-    // remove previous image (clean pointer-pointer behavior)
-    const old = document.querySelector(".img");
+  document.addEventListener("click", (e) => {
+    const old = document.querySelector("img");
     if (old) old.remove();
 
     const img = document.createElement("img");
-    img.className = "img";
 
-    // random size
-    const size = 120 + Math.random() * 220;
-    img.style.width = size + "px";
+    img.src = "https://picsum.photos/400?random=" + Math.random();
 
-    // random rotation
-    const rotation = (Math.random() - 0.5) * 40;
-    img.style.transform = `translate(-50%, -50%) rotate(${rotation}deg)`;
+    img.style.left = e.clientX + "px";
+    img.style.top = e.clientY + "px";
 
-    // position at click
-    img.style.left = x + "px";
-    img.style.top = y + "px";
-
-    // preload random unicycle image from Unsplash
-    const temp = new Image();
-    temp.onload = () => {
-      img.src = temp.src;
-      document.body.appendChild(img);
-
-      // fade in smoothly
-      requestAnimationFrame(() => {
-        img.style.opacity = 1;
-      });
-    };
-
-    temp.src = "https://source.unsplash.com/600x600/?unicycle&" + Math.random();
-  }
-
-  // click anywhere to spawn image at cursor
-  document.addEventListener("click", (e) => {
-    spawnImage(e.clientX, e.clientY);
+    document.body.appendChild(img);
   });
-
-  // optional: spawn one in the center on load
-  window.onload = () => {
-    spawnImage(window.innerWidth / 2, window.innerHeight / 2);
-  };
 </script>
 
 </body>
