@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Random Unicycle</title>
+
+  <style>
+    body {
+      margin: 0;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: black;
+      cursor: pointer;
+      overflow: hidden;
+    }
+
+    img {
+      max-width: 90vw;
+      max-height: 90vh;
+      object-fit: contain;
+      transition: opacity 0.3s ease;
+    }
+
+    .fade {
+      opacity: 0;
+    }
+  </style>
+</head>
+<body>
+
+  <img id="unicycle" src="" alt="Random Unicycle" />
+
+  <script>
+    const img = document.getElementById("unicycle");
+
+    function newImage() {
+      // Uses Unsplash random image API
+      const url = "https://source.unsplash.com/800x800/?unicycle&" + Math.random();
+
+      img.classList.add("fade");
+
+      setTimeout(() => {
+        img.src = url;
+        img.classList.remove("fade");
+      }, 200);
+    }
+
+    // Load first image
+    newImage();
+
+    // Change image on click anywhere
+    document.body.addEventListener("click", newImage);
+  </script>
+
+</body>
+</html>
